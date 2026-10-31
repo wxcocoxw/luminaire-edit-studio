@@ -1,0 +1,66 @@
+{
+  "source_input": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_WITH_UPLOADED_SOURCE.png"
+    }
+  },
+  "restore_alpha": {
+    "class_type": "JoinImageWithAlpha",
+    "inputs": {
+      "image": [
+        "source_input",
+        0
+      ],
+      "alpha": [
+        "source_input",
+        1
+      ]
+    }
+  },
+  "save_final": {
+    "class_type": "QwenStudioSaveDelivery",
+    "inputs": {
+      "images": [
+        "delivery",
+        0
+      ],
+      "delivery": [
+        "delivery_settings",
+        0
+      ],
+      "filename_prefix": "Qwen21Studio/api/upscale/final"
+    }
+  },
+  "delivery_settings": {
+    "class_type": "QwenStudioDeliveryPreset",
+    "inputs": {
+      "preset": "Keep input size",
+      "width": 1920,
+      "height": 1080,
+      "scale": 2.0,
+      "fit": "Pad",
+      "upscale": "Lanczos",
+      "upscale_model": "none",
+      "alpha": "Preserve",
+      "background": "Black",
+      "grain": 0.0,
+      "grain_seed": 42,
+      "project": "Qwen21Studio",
+      "version": "v001"
+    }
+  },
+  "delivery": {
+    "class_type": "QwenStudioDeliver",
+    "inputs": {
+      "image": [
+        "source_input",
+        0
+      ],
+      "delivery": [
+        "delivery_settings",
+        0
+      ]
+    }
+  }
+}

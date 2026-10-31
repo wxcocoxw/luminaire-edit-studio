@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "task": "upscale",
+  "source": {
+    "node_id": "source_input",
+    "input": "image"
+  },
+  "save": {
+    "node_id": "save_final",
+    "input": "filename_prefix"
+  },
+  "additional_saves": [],
+  "references": [],
+  "postprocess": {
+    "input": [
+      "restore_alpha",
+      0
+    ],
+    "targets": [
+      {
+        "node_id": "save_final",
+        "input": "images"
+      }
+    ],
+    "defaults": {
+      "upscale": "lanczos",
+      "scale": 2.0,
+      "upscale_model": null,
+      "grain": 0.0,
+      "grain_seed": 42
+    }
+  }
+}

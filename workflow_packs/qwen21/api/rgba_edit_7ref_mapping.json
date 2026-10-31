@@ -1,0 +1,76 @@
+{
+  "version": 2,
+  "task": "generate",
+  "source": {
+    "node_id": "source_input",
+    "input": "image"
+  },
+  "prompt": {
+    "node_id": "prompt_text",
+    "input": "value"
+  },
+  "seed": {
+    "node_id": "sampler",
+    "input": "seed"
+  },
+  "save": {
+    "node_id": "save_final",
+    "input": "filename_prefix"
+  },
+  "additional_saves": [
+    {
+      "node_id": "save_raw",
+      "input": "filename_prefix",
+      "suffix": "raw"
+    }
+  ],
+  "references": [
+    {
+      "node_id": "reference_1",
+      "input": "image"
+    },
+    {
+      "node_id": "reference_2",
+      "input": "image"
+    },
+    {
+      "node_id": "reference_3",
+      "input": "image"
+    },
+    {
+      "node_id": "reference_4",
+      "input": "image"
+    },
+    {
+      "node_id": "reference_5",
+      "input": "image"
+    },
+    {
+      "node_id": "reference_6",
+      "input": "image"
+    },
+    {
+      "node_id": "reference_7",
+      "input": "image"
+    }
+  ],
+  "postprocess": {
+    "input": [
+      "finish",
+      0
+    ],
+    "targets": [
+      {
+        "node_id": "save_final",
+        "input": "images"
+      }
+    ],
+    "defaults": {
+      "upscale": "off",
+      "scale": 2.0,
+      "upscale_model": null,
+      "grain": 0.0,
+      "grain_seed": 42
+    }
+  }
+}

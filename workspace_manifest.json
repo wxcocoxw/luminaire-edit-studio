@@ -1,0 +1,32 @@
+{
+  "format_version": 1,
+  "display_name": "Luminaire Edit Studio",
+  "version": "1.4.0",
+  "date": "2026-10-31",
+  "package_slug": "luminaire-edit-studio",
+  "license": "GPL-3.0-only",
+  "shared_nodes": [
+    "QwenStudioProtection",
+    "QwenStudioMaskPolicy",
+    "QwenStudioRestoreProtected",
+    "QwenStudioDeliveryPreset",
+    "QwenStudioLayoutPreview",
+    "QwenStudioDeliver",
+    "QwenStudioSaveDelivery"
+  ],
+  "default_pack": "qwen21",
+  "packs": [
+    {
+      "id": "qwen21",
+      "manifest": "workflow_packs/qwen21/pack.json"
+    }
+  ],
+  "shared_runtime_files": [
+    "__init__.py",
+    "nodes.py",
+    "luminaire/__init__.py",
+    "luminaire/shared.py",
+    "luminaire/engines/__init__.py",
+    "web/studio.js"
+  ]
+}

@@ -1,0 +1,433 @@
+{
+  "model_loader": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "model_cache": {
+    "class_type": "QwenImage21Cache",
+    "inputs": {
+      "model": [
+        "model_loader",
+        0
+      ],
+      "device": "auto",
+      "dtype": "default"
+    }
+  },
+  "clip_loader": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_8b_w4a8.safetensors",
+      "type": "qwen_image",
+      "device": "default"
+    }
+  },
+  "vae_loader": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "texture_fix_vae_for_qwen_image_2.1_bf16.safetensors"
+    }
+  },
+  "source_input": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_WITH_UPLOADED_SOURCE.png"
+    }
+  },
+  "prompt_text": {
+    "class_type": "PrimitiveStringMultiline",
+    "inputs": {
+      "value": "Describe the edit. Preserve everything not mentioned."
+    }
+  },
+  "mask_input": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_WITH_WHITE_EDIT_MASK.png"
+    }
+  },
+  "mask_red": {
+    "class_type": "ImageToMask",
+    "inputs": {
+      "image": [
+        "mask_input",
+        0
+      ],
+      "channel": "red"
+    }
+  },
+  "prepare": {
+    "class_type": "AUSBOSS_NODES_CropForInpaint",
+    "inputs": {
+      "context_factor": 1.4,
+      "blend_pixels": 16,
+      "output_multiple": 32,
+      "target_width": 0,
+      "target_height": 0,
+      "mask_grow": 8,
+      "mask_blur": 0,
+      "invert_mask": false,
+      "context_pixels": 64,
+      "target_megapixels": [
+        "render_mode",
+        1
+      ],
+      "rescale_algorithm": "bilinear",
+      "extend_left": 0,
+      "extend_right": 0,
+      "extend_up": 0,
+      "extend_down": 0,
+      "keep_inside": true,
+      "image": [
+        "source_input",
+        0
+      ],
+      "mask": [
+        "mask_policy",
+        0
+      ]
+    }
+  },
+  "context_reference": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": [
+        "source_input",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "megapixels": 1.0,
+      "resolution_steps": 32
+    }
+  },
+  "encode": {
+    "class_type": "TextEncodeQwenImage21",
+    "inputs": {
+      "clip": [
+        "clip_loader",
+        0
+      ],
+      "vae": [
+        "vae_loader",
+        0
+      ],
+      "prompt": [
+        "prompt_text",
+        0
+      ],
+      "negative_prompt": "",
+      "resolution": 0,
+      "images.image_1": [
+        "prepare",
+        0
+      ],
+      "images.image_2": [
+        "context_reference",
+        0
+      ],
+      "images.image_3": [
+        "reference_1_size",
+        0
+      ],
+      "images.image_4": [
+        "reference_2_size",
+        0
+      ],
+      "images.image_5": [
+        "reference_3_size",
+        0
+      ],
+      "images.image_6": [
+        "reference_4_size",
+        0
+      ],
+      "images.image_7": [
+        "reference_5_size",
+        0
+      ],
+      "images.image_8": [
+        "reference_6_size",
+        0
+      ]
+    }
+  },
+  "sampler": {
+    "class_type": "QwenStudioSampler",
+    "inputs": {
+      "model": [
+        "model_cache",
+        0
+      ],
+      "positive": [
+        "encode",
+        0
+      ],
+      "negative": [
+        "encode",
+        1
+      ],
+      "latent_image": [
+        "encode",
+        2
+      ],
+      "seed": 42,
+      "steps": 40,
+      "mode": [
+        "render_mode",
+        0
+      ],
+      "attention_backend": "Auto"
+    }
+  },
+  "decode": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "sampler",
+        0
+      ],
+      "vae": [
+        "vae_loader",
+        0
+      ]
+    }
+  },
+  "rgb_for_stitch": {
+    "class_type": "SplitImageWithAlpha",
+    "inputs": {
+      "image": [
+        "decode",
+        0
+      ]
+    }
+  },
+  "finish": {
+    "class_type": "AUSBOSS_NODES_StitchInpaint",
+    "inputs": {
+      "stitcher": [
+        "prepare",
+        2
+      ],
+      "inpainted": [
+        "rgb_for_stitch",
+        0
+      ],
+      "fix_edge_halo": false,
+      "color_match": 0.0,
+      "seam": "classic"
+    }
+  },
+  "save_raw": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "decode",
+        0
+      ],
+      "filename_prefix": "Qwen21Studio/api/masked_edit/raw"
+    }
+  },
+  "save_final": {
+    "class_type": "QwenStudioSaveDelivery",
+    "inputs": {
+      "images": [
+        "delivery",
+        0
+      ],
+      "delivery": [
+        "delivery_settings",
+        0
+      ],
+      "filename_prefix": "Qwen21Studio/api/masked_edit/final"
+    }
+  },
+  "reference_1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_WITH_REFERENCE_1.png"
+    }
+  },
+  "reference_1_size": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": [
+        "reference_1",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "megapixels": 1.0,
+      "resolution_steps": 32
+    }
+  },
+  "reference_2": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_WITH_REFERENCE_2.png"
+    }
+  },
+  "reference_2_size": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": [
+        "reference_2",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "megapixels": 1.0,
+      "resolution_steps": 32
+    }
+  },
+  "reference_3": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_WITH_REFERENCE_3.png"
+    }
+  },
+  "reference_3_size": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": [
+        "reference_3",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "megapixels": 1.0,
+      "resolution_steps": 32
+    }
+  },
+  "reference_4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_WITH_REFERENCE_4.png"
+    }
+  },
+  "reference_4_size": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": [
+        "reference_4",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "megapixels": 1.0,
+      "resolution_steps": 32
+    }
+  },
+  "reference_5": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_WITH_REFERENCE_5.png"
+    }
+  },
+  "reference_5_size": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": [
+        "reference_5",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "megapixels": 1.0,
+      "resolution_steps": 32
+    }
+  },
+  "reference_6": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_WITH_REFERENCE_6.png"
+    }
+  },
+  "reference_6_size": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": [
+        "reference_6",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "megapixels": 1.0,
+      "resolution_steps": 32
+    }
+  },
+  "render_mode": {
+    "class_type": "QwenStudioRenderMode",
+    "inputs": {
+      "quality_megapixels": 2.0,
+      "mode": "Quality",
+      "draft_megapixels": 1.0
+    }
+  },
+  "delivery_settings": {
+    "class_type": "QwenStudioDeliveryPreset",
+    "inputs": {
+      "preset": "Keep input size",
+      "width": 1920,
+      "height": 1080,
+      "scale": 2.0,
+      "fit": "Pad",
+      "upscale": "Lanczos",
+      "upscale_model": "none",
+      "alpha": "Preserve",
+      "background": "Black",
+      "grain": 0.0,
+      "grain_seed": 42,
+      "project": "Qwen21Studio",
+      "version": "v001"
+    }
+  },
+  "mask_policy": {
+    "class_type": "QwenStudioMaskPolicy",
+    "inputs": {
+      "mask": [
+        "mask_red",
+        0
+      ],
+      "polarity": "White edits"
+    }
+  },
+  "protection": {
+    "class_type": "QwenStudioProtection",
+    "inputs": {
+      "source": [
+        "source_input",
+        0
+      ],
+      "mask": [
+        "mask_policy",
+        1
+      ],
+      "enabled": true,
+      "grow": 0,
+      "feather": 8
+    }
+  },
+  "protected": {
+    "class_type": "QwenStudioRestoreProtected",
+    "inputs": {
+      "image": [
+        "finish",
+        0
+      ],
+      "protection": [
+        "protection",
+        0
+      ]
+    }
+  },
+  "delivery": {
+    "class_type": "QwenStudioDeliver",
+    "inputs": {
+      "image": [
+        "protected",
+        0
+      ],
+      "delivery": [
+        "delivery_settings",
+        0
+      ]
+    }
+  }
+}

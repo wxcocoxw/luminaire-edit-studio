@@ -1,0 +1,342 @@
+{
+  "build": "1.4.0",
+  "date": "2026-10-31",
+  "tasks": {
+    "edit": {
+      "gated_nodes": [
+        155,
+        157,
+        161,
+        162,
+        163,
+        318,
+        322
+      ],
+      "engine": 155,
+      "source": 149,
+      "prompt": 151,
+      "enhancer": 152,
+      "final_save": 161,
+      "raw_save": 157,
+      "kind": "generate",
+      "postprocess": {
+        "lanczos": 158,
+        "ai": 159,
+        "grain": 160,
+        "input": 156,
+        "legacy_nodes": [
+          158,
+          159,
+          160
+        ],
+        "delivery": 320,
+        "settings": 314
+      }
+    },
+    "masked_edit": {
+      "gated_nodes": [
+        170,
+        172,
+        176,
+        177,
+        178,
+        326,
+        327
+      ],
+      "engine": 170,
+      "source": 165,
+      "prompt": 167,
+      "enhancer": 168,
+      "final_save": 176,
+      "raw_save": 172,
+      "kind": "generate",
+      "postprocess": {
+        "lanczos": 173,
+        "ai": 174,
+        "grain": 175,
+        "input": 171,
+        "legacy_nodes": [
+          173,
+          174,
+          175
+        ],
+        "delivery": 329,
+        "settings": 314
+      }
+    },
+    "outpaint": {
+      "gated_nodes": [
+        185,
+        187,
+        191,
+        192,
+        193
+      ],
+      "engine": 185,
+      "source": 180,
+      "prompt": 182,
+      "enhancer": 183,
+      "final_save": 191,
+      "raw_save": 187,
+      "kind": "generate",
+      "postprocess": {
+        "lanczos": 188,
+        "ai": 189,
+        "grain": 190,
+        "input": 186,
+        "legacy_nodes": [
+          188,
+          189,
+          190
+        ],
+        "delivery": 331,
+        "settings": 314
+      }
+    },
+    "batch": {
+      "gated_nodes": [
+        201,
+        203,
+        207,
+        210,
+        211
+      ],
+      "engine": 201,
+      "source": 195,
+      "prompt": 197,
+      "enhancer": 198,
+      "final_save": 207,
+      "raw_save": 203,
+      "kind": "generate",
+      "postprocess": {
+        "lanczos": 204,
+        "ai": 205,
+        "grain": 206,
+        "input": 202,
+        "legacy_nodes": [
+          204,
+          205,
+          206
+        ],
+        "delivery": 333,
+        "settings": 314
+      }
+    },
+    "rgba": {
+      "gated_nodes": [
+        218,
+        220,
+        224,
+        225,
+        226
+      ],
+      "engine": 218,
+      "source": 213,
+      "prompt": 215,
+      "enhancer": 216,
+      "final_save": 224,
+      "raw_save": 220,
+      "kind": "generate",
+      "postprocess": {
+        "lanczos": 221,
+        "ai": 222,
+        "grain": 223,
+        "input": 219,
+        "legacy_nodes": [
+          221,
+          222,
+          223
+        ],
+        "delivery": 335,
+        "settings": 314
+      }
+    },
+    "t2i": {
+      "gated_nodes": [
+        231,
+        232,
+        236,
+        237
+      ],
+      "engine": 231,
+      "source": null,
+      "prompt": 228,
+      "enhancer": 229,
+      "final_save": 236,
+      "raw_save": 232,
+      "kind": "generate",
+      "postprocess": {
+        "lanczos": 233,
+        "ai": 234,
+        "grain": 235,
+        "input": 231,
+        "legacy_nodes": [
+          233,
+          234,
+          235
+        ],
+        "delivery": 337,
+        "settings": 314
+      }
+    },
+    "upscale_single": {
+      "kind": "upscale",
+      "gated_nodes": [
+        240,
+        244,
+        245,
+        246,
+        341
+      ],
+      "engine": 240,
+      "source": 239,
+      "prompt": null,
+      "enhancer": null,
+      "final_save": 245,
+      "raw_save": 244,
+      "postprocess": {
+        "lanczos": 241,
+        "ai": 242,
+        "grain": 243,
+        "input": 240,
+        "legacy_nodes": [
+          241,
+          242,
+          243
+        ],
+        "delivery": 339,
+        "settings": 314
+      }
+    },
+    "upscale_batch": {
+      "kind": "upscale",
+      "gated_nodes": [
+        251,
+        255,
+        256,
+        259
+      ],
+      "engine": 251,
+      "source": 250,
+      "prompt": null,
+      "enhancer": null,
+      "final_save": 256,
+      "raw_save": 255,
+      "postprocess": {
+        "lanczos": 252,
+        "ai": 253,
+        "grain": 254,
+        "input": 251,
+        "legacy_nodes": [
+          252,
+          253,
+          254
+        ],
+        "delivery": 343,
+        "settings": 314
+      }
+    }
+  },
+  "features": {
+    "Edit · prompt enhancer": [
+      152
+    ],
+    "Edit · structural guidance": [
+      154
+    ],
+    "Edit · RGB alignment": [
+      156
+    ],
+    "Masked Edit · prompt enhancer": [
+      168
+    ],
+    "Outpaint · prompt enhancer": [
+      183
+    ],
+    "Folder Batch · prompt enhancer": [
+      198
+    ],
+    "Folder Batch · structural guidance": [
+      200
+    ],
+    "Folder Batch · RGB alignment": [
+      202
+    ],
+    "Transparent Assets · prompt enhancer": [
+      216
+    ],
+    "Text to Image · prompt enhancer": [
+      229
+    ]
+  },
+  "shared": {
+    "models": 133,
+    "custom_megapixels": 134,
+    "custom_steps": 135,
+    "quality_choice": 139,
+    "quality_values": 140,
+    "seed": 136,
+    "reference_loader": 137,
+    "reference_bank": 138,
+    "delivery_settings": 314,
+    "render_mode": 312
+  },
+  "postprocess": {
+    "order": [
+      "restore_protected_pixels",
+      "upscale_if_requested",
+      "exact_size",
+      "alpha_policy",
+      "grain"
+    ],
+    "settings_node": 314,
+    "initial_preset": "Keep input size",
+    "initial_upscale": "Lanczos",
+    "initial_grain": 0
+  },
+  "studio_bus": {
+    "required_pack": "ComfyUI-KJNodes",
+    "minimum_capability": "March 19, 2026+ cross-subgraph Set/Get rewrite",
+    "published_values": [
+      "STUDIO_MODEL",
+      "STUDIO_CLIP",
+      "STUDIO_VAE",
+      "STUDIO_SEED",
+      "STUDIO_MEGAPIXELS",
+      "STUDIO_STEPS",
+      "STUDIO_REF_01",
+      "STUDIO_REF_02",
+      "STUDIO_REF_03",
+      "STUDIO_REF_04",
+      "STUDIO_REF_05",
+      "STUDIO_REF_06",
+      "STUDIO_REF_07",
+      "STUDIO_REF_08",
+      "STUDIO_DELIVERY",
+      "STUDIO_RENDER_MODE"
+    ],
+    "reader_subgraphs": [
+      "SYS · Studio Bus Reader — Core",
+      "SYS · Studio Bus Reader — Render",
+      "SYS · Studio Bus Reader — References",
+      "SYS · Studio Bus Reader — Delivery"
+    ]
+  },
+  "extension": "ComfyUI-QwenStudio",
+  "delivery_settings": 314,
+  "render_mode": 312,
+  "performance": {
+    "attention_default": "Auto",
+    "attention_choices": [
+      "Auto",
+      "PyTorch",
+      "Comfy Kitchen INT8",
+      "SageAttention"
+    ],
+    "upscaler_cache_entries": 1,
+    "mode_switch_unload": "previous transformer family and clones only"
+  },
+  "license": "GPL-3.0-only",
+  "display_name": "Luminaire Edit Studio",
+  "pack_id": "qwen21"
+}

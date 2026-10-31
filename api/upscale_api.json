@@ -1,0 +1,31 @@
+{
+  "source_input": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_WITH_UPLOADED_SOURCE.png"
+    }
+  },
+  "restore_alpha": {
+    "class_type": "JoinImageWithAlpha",
+    "inputs": {
+      "image": [
+        "source_input",
+        0
+      ],
+      "alpha": [
+        "source_input",
+        1
+      ]
+    }
+  },
+  "save_final": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "restore_alpha",
+        0
+      ],
+      "filename_prefix": "Qwen21Studio/api/upscale/final"
+    }
+  }
+}

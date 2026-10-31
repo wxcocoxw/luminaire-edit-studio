@@ -1,0 +1,221 @@
+{
+  "model_loader": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "model_cache": {
+    "class_type": "QwenImage21Cache",
+    "inputs": {
+      "model": [
+        "model_loader",
+        0
+      ],
+      "device": "auto",
+      "dtype": "default"
+    }
+  },
+  "clip_loader": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+      "type": "qwen_image",
+      "device": "default"
+    }
+  },
+  "vae_loader": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "texture_fix_vae_for_qwen_image_2.1_bf16.safetensors"
+    }
+  },
+  "source_input": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_WITH_UPLOADED_SOURCE.png"
+    }
+  },
+  "prompt_text": {
+    "class_type": "PrimitiveStringMultiline",
+    "inputs": {
+      "value": "Describe the edit. Preserve everything not mentioned."
+    }
+  },
+  "prepare": {
+    "class_type": "AUSBOSS_NODES_CropForInpaint",
+    "inputs": {
+      "context_factor": 1.4,
+      "blend_pixels": 16,
+      "output_multiple": 32,
+      "target_width": 0,
+      "target_height": 0,
+      "mask_grow": 8,
+      "mask_blur": 0,
+      "invert_mask": false,
+      "context_pixels": 64,
+      "target_megapixels": 2.0,
+      "rescale_algorithm": "bilinear",
+      "extend_left": 0,
+      "extend_right": 0,
+      "extend_up": 0,
+      "extend_down": 0,
+      "keep_inside": true,
+      "image": [
+        "source_input",
+        0
+      ],
+      "mask": [
+        "source_input",
+        1
+      ]
+    }
+  },
+  "context_reference": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": [
+        "source_input",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "megapixels": 1.0,
+      "resolution_steps": 32
+    }
+  },
+  "encode": {
+    "class_type": "TextEncodeQwenImage21",
+    "inputs": {
+      "clip": [
+        "clip_loader",
+        0
+      ],
+      "vae": [
+        "vae_loader",
+        0
+      ],
+      "prompt": [
+        "prompt_text",
+        0
+      ],
+      "negative_prompt": "",
+      "resolution": 0,
+      "images.image_1": [
+        "prepare",
+        0
+      ],
+      "images.image_2": [
+        "context_reference",
+        0
+      ],
+      "images.image_3": [
+        "reference_1_size",
+        0
+      ]
+    }
+  },
+  "sampler": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": [
+        "model_cache",
+        0
+      ],
+      "positive": [
+        "encode",
+        0
+      ],
+      "negative": [
+        "encode",
+        1
+      ],
+      "latent_image": [
+        "encode",
+        2
+      ],
+      "seed": 42,
+      "steps": 40,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+    }
+  },
+  "decode": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "sampler",
+        0
+      ],
+      "vae": [
+        "vae_loader",
+        0
+      ]
+    }
+  },
+  "rgb_for_stitch": {
+    "class_type": "SplitImageWithAlpha",
+    "inputs": {
+      "image": [
+        "decode",
+        0
+      ]
+    }
+  },
+  "finish": {
+    "class_type": "AUSBOSS_NODES_StitchInpaint",
+    "inputs": {
+      "stitcher": [
+        "prepare",
+        2
+      ],
+      "inpainted": [
+        "rgb_for_stitch",
+        0
+      ],
+      "fix_edge_halo": false,
+      "color_match": 0.0,
+      "seam": "classic"
+    }
+  },
+  "save_raw": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "decode",
+        0
+      ],
+      "filename_prefix": "Qwen21Studio/api/masked_alpha/raw"
+    }
+  },
+  "save_final": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "finish",
+        0
+      ],
+      "filename_prefix": "Qwen21Studio/api/masked_alpha/final"
+    }
+  },
+  "reference_1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_WITH_REFERENCE_1.png"
+    }
+  },
+  "reference_1_size": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": [
+        "reference_1",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "megapixels": 1.0,
+      "resolution_steps": 32
+    }
+  }
+}

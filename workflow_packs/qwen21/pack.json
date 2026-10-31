@@ -1,0 +1,64 @@
+{
+  "format_version": 1,
+  "id": "qwen21",
+  "display_name": "Qwen Image 2.1",
+  "version": "1.4.0",
+  "status": "supported",
+  "engine_module": "luminaire.engines.qwen21",
+  "workflow": "workflow_packs/qwen21/QWEN_IMAGE_21_STUDIO.json",
+  "workflow_manifest": "workflow_packs/qwen21/workflow_manifest.json",
+  "api_directory": "workflow_packs/qwen21/api/v1_3",
+  "legacy_api_directory": "workflow_packs/qwen21/api",
+  "prompt_sources": {
+    "edit": "workflow_packs/qwen21/prompts/edit_enhancer.txt",
+    "t2i": "workflow_packs/qwen21/prompts/t2i_enhancer.txt"
+  },
+  "tasks": [
+    "edit",
+    "masked_edit",
+    "outpaint",
+    "batch",
+    "rgba",
+    "t2i",
+    "upscale_single",
+    "upscale_batch"
+  ],
+  "capabilities": {
+    "image_edit": true,
+    "masked_edit": true,
+    "outpaint": true,
+    "folder_batch": true,
+    "rgba_generation": true,
+    "text_to_image": true,
+    "draft": true,
+    "upscale_only": true
+  },
+  "limits": {
+    "draft_checkpoint": "Viggle v0.2.1 merged six-step",
+    "draft_total_images": 3,
+    "draft_quality_loras": false,
+    "draft_controlnet": false,
+    "output": "8-bit PNG"
+  },
+  "compatibility_copies": [
+    {
+      "source": "workflow_packs/qwen21/QWEN_IMAGE_21_STUDIO.json",
+      "target": "QWEN_IMAGE_21_STUDIO.json"
+    },
+    {
+      "source": "workflow_packs/qwen21/workflow_manifest.json",
+      "target": "workflow_manifest.json"
+    },
+    {
+      "source": "workflow_packs/qwen21/api",
+      "target": "api"
+    },
+    {
+      "source": "workflow_packs/qwen21/prompts",
+      "target": "prompts"
+    }
+  ],
+  "runtime_files": [
+    "luminaire/engines/qwen21.py"
+  ]
+}

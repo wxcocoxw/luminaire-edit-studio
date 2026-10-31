@@ -1,0 +1,390 @@
+{
+  "model_loader": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "model_cache": {
+    "class_type": "QwenImage21Cache",
+    "inputs": {
+      "model": [
+        "model_loader",
+        0
+      ],
+      "device": "auto",
+      "dtype": "default"
+    }
+  },
+  "clip_loader": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_8b_w4a8.safetensors",
+      "type": "qwen_image",
+      "device": "default"
+    }
+  },
+  "vae_loader": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "texture_fix_vae_for_qwen_image_2.1_bf16.safetensors"
+    }
+  },
+  "source_input": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_WITH_UPLOADED_SOURCE.png"
+    }
+  },
+  "prompt_text": {
+    "class_type": "PrimitiveStringMultiline",
+    "inputs": {
+      "value": "Describe the edit. Preserve everything not mentioned."
+    }
+  },
+  "restore_alpha": {
+    "class_type": "JoinImageWithAlpha",
+    "inputs": {
+      "image": [
+        "source_input",
+        0
+      ],
+      "alpha": [
+        "source_input",
+        1
+      ]
+    }
+  },
+  "prepare": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": [
+        "restore_alpha",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "megapixels": [
+        "render_mode",
+        1
+      ],
+      "resolution_steps": 32
+    }
+  },
+  "encode": {
+    "class_type": "TextEncodeQwenImage21",
+    "inputs": {
+      "clip": [
+        "clip_loader",
+        0
+      ],
+      "vae": [
+        "vae_loader",
+        0
+      ],
+      "prompt": [
+        "prompt_text",
+        0
+      ],
+      "negative_prompt": "",
+      "resolution": 0,
+      "images.image_1": [
+        "prepare",
+        0
+      ],
+      "images.image_2": [
+        "reference_1_size",
+        0
+      ],
+      "images.image_3": [
+        "reference_2_size",
+        0
+      ],
+      "images.image_4": [
+        "reference_3_size",
+        0
+      ],
+      "images.image_5": [
+        "reference_4_size",
+        0
+      ],
+      "images.image_6": [
+        "reference_5_size",
+        0
+      ],
+      "images.image_7": [
+        "reference_6_size",
+        0
+      ],
+      "images.image_8": [
+        "reference_7_size",
+        0
+      ],
+      "images.image_9": [
+        "reference_8_size",
+        0
+      ]
+    }
+  },
+  "sampler": {
+    "class_type": "QwenStudioSampler",
+    "inputs": {
+      "model": [
+        "model_cache",
+        0
+      ],
+      "positive": [
+        "encode",
+        0
+      ],
+      "negative": [
+        "encode",
+        1
+      ],
+      "latent_image": [
+        "encode",
+        2
+      ],
+      "seed": 42,
+      "steps": 40,
+      "mode": [
+        "render_mode",
+        0
+      ],
+      "attention_backend": "Auto"
+    }
+  },
+  "decode": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "sampler",
+        0
+      ],
+      "vae": [
+        "vae_loader",
+        0
+      ]
+    }
+  },
+  "finish": {
+    "class_type": "JoinImageWithAlpha",
+    "inputs": {
+      "image": [
+        "decode",
+        0
+      ],
+      "alpha": [
+        "source_input",
+        1
+      ]
+    }
+  },
+  "save_raw": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "decode",
+        0
+      ],
+      "filename_prefix": "Qwen21Studio/api/rgba_edit/raw"
+    }
+  },
+  "save_final": {
+    "class_type": "QwenStudioSaveDelivery",
+    "inputs": {
+      "images": [
+        "delivery",
+        0
+      ],
+      "delivery": [
+        "delivery_settings",
+        0
+      ],
+      "filename_prefix": "Qwen21Studio/api/rgba_edit/final"
+    }
+  },
+  "reference_1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_WITH_REFERENCE_1.png"
+    }
+  },
+  "reference_1_size": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": [
+        "reference_1",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "megapixels": 1.0,
+      "resolution_steps": 32
+    }
+  },
+  "reference_2": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_WITH_REFERENCE_2.png"
+    }
+  },
+  "reference_2_size": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": [
+        "reference_2",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "megapixels": 1.0,
+      "resolution_steps": 32
+    }
+  },
+  "reference_3": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_WITH_REFERENCE_3.png"
+    }
+  },
+  "reference_3_size": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": [
+        "reference_3",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "megapixels": 1.0,
+      "resolution_steps": 32
+    }
+  },
+  "reference_4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_WITH_REFERENCE_4.png"
+    }
+  },
+  "reference_4_size": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": [
+        "reference_4",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "megapixels": 1.0,
+      "resolution_steps": 32
+    }
+  },
+  "reference_5": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_WITH_REFERENCE_5.png"
+    }
+  },
+  "reference_5_size": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": [
+        "reference_5",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "megapixels": 1.0,
+      "resolution_steps": 32
+    }
+  },
+  "reference_6": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_WITH_REFERENCE_6.png"
+    }
+  },
+  "reference_6_size": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": [
+        "reference_6",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "megapixels": 1.0,
+      "resolution_steps": 32
+    }
+  },
+  "reference_7": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_WITH_REFERENCE_7.png"
+    }
+  },
+  "reference_7_size": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": [
+        "reference_7",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "megapixels": 1.0,
+      "resolution_steps": 32
+    }
+  },
+  "reference_8": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_WITH_REFERENCE_8.png"
+    }
+  },
+  "reference_8_size": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": [
+        "reference_8",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "megapixels": 1.0,
+      "resolution_steps": 32
+    }
+  },
+  "render_mode": {
+    "class_type": "QwenStudioRenderMode",
+    "inputs": {
+      "quality_megapixels": 2.0,
+      "mode": "Quality",
+      "draft_megapixels": 1.0
+    }
+  },
+  "delivery_settings": {
+    "class_type": "QwenStudioDeliveryPreset",
+    "inputs": {
+      "preset": "Keep input size",
+      "width": 1920,
+      "height": 1080,
+      "scale": 2.0,
+      "fit": "Pad",
+      "upscale": "Lanczos",
+      "upscale_model": "none",
+      "alpha": "Preserve",
+      "background": "Black",
+      "grain": 0.0,
+      "grain_seed": 42,
+      "project": "Qwen21Studio",
+      "version": "v001"
+    }
+  },
+  "delivery": {
+    "class_type": "QwenStudioDeliver",
+    "inputs": {
+      "image": [
+        "finish",
+        0
+      ],
+      "delivery": [
+        "delivery_settings",
+        0
+      ]
+    }
+  }
+}
